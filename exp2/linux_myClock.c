@@ -6,6 +6,7 @@
 #include <sys/wait.h>
 int main(int argc, char *argv[])
 {
+    // printf("son argv %s\n",argv[1]);
     if (argc == 1)
     {
         printf("-------New process begin-------\n");

@@ -16,13 +16,12 @@ int main(int argc, char *argv[])
     }
     if (pid == 0)
     {
-        if (argc == 2)
+        int ret = execvp(argv[1], &argv[1]);
+        ret = execv(argv[1], &argv[1]);
+        if (ret == -1)
         {
-            execvp(argv[1], &argv[1]);
-        }
-        else
-        {
-            execv(argv[1], &argv[1]);
+            printf("Open Fail");
+            return 0;
         }
     }
     else
