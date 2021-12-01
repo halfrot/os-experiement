@@ -6,7 +6,9 @@
 #include <sys/wait.h>
 int main(int argc, char *argv[])
 {
+    // 记录时间戳的结构体timeval
     struct timeval begin_time, end_time;
+    // 保存当前进程pid
     pid_t pid;
     pid = fork();
     if (pid < 0)
@@ -16,8 +18,11 @@ int main(int argc, char *argv[])
     }
     if (pid == 0)
     {
+        // execvp和execv调用程序失败时，返回值均为-1
+        // 调用成功即进入被调用程序
         int ret = execvp(argv[1], &argv[1]);
         ret = execv(argv[1], &argv[1]);
+        // 调用失败
         if (ret == -1)
         {
             printf("Open Fail");
@@ -26,9 +31,13 @@ int main(int argc, char *argv[])
     }
     else
     {
+        // 获取开始时间戳
         gettimeofday(&begin_time, NULL);
+        // 等待子进程结束
         wait(NULL);
+        // 获取结束时间戳
         gettimeofday(&end_time, NULL);
+        // 格式化子进程运行时间
         int tot = (end_time.tv_sec - begin_time.tv_sec) * 1000000 + (end_time.tv_usec - begin_time.tv_usec);
         int us = tot % 1000;
         tot = (tot - us) / 1000;

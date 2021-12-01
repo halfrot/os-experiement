@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
         printf("-------New process begin-------\n");
         printf("Sleep for %s\n", argv[1]);
         int sleep_time = 0;
+        // 将参数t转化为int类型
         for (int i = 0; argv[1][i]; i++)
         {
             sleep_time = sleep_time * 10 + argv[1][i] - '0';
