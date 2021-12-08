@@ -28,7 +28,7 @@ BOOL StartClone(HANDLE* lpHandle) {
 		temp_cnt++;
 	}
 	for (int i = 0; i < 2; i++) {
-		sprintf(szCmdLine, "\"%s\" productor %d", szFilename, i);
+		sprintf(szCmdLine, "\"%s\" producer %d", szFilename, i);
 		STARTUPINFO si;
 		memset(&si, 0, sizeof(si));
 		si.cb = sizeof(si);
@@ -62,8 +62,8 @@ void Parent() {
 	CloseHandle(hMapping);
 	CloseHandle(hMutexMapping);
 }
-void Productor(int n) {
-	printf("Productor: %d is running.\n", n);
+void Producer(int n) {
+	printf("producer: %d is running.\n", n);
 	HANDLE hMutexMapping = OpenMutex(MUTEX_ALL_ACCESS, true, "mutex");
 	HANDLE hMapping = OpenFileMapping(FILE_MAP_ALL_ACCESS, NULL, "map");
 	if (hMapping == INVALID_HANDLE_VALUE) printf("error\n");
@@ -82,7 +82,7 @@ void Productor(int n) {
 			pnData->write = (pnData->write + 1) % 3;
 			pnData->num++;
 			GetLocalTime(&st);
-			printf("%02d:%02d:%02d productor[%d] s 缓冲区剩余: %d个 ", st.wHour, st.wMinute, st.wSecond, n, pnData->num);
+			printf("%02d:%02d:%02d producer[%d] s 缓冲区剩余: %d个 ", st.wHour, st.wMinute, st.wSecond, n, pnData->num);
 			for (int j = 0; j < 3; j++) printf("%c ", pnData->buffer[j]);
 			printf("\n");
 		}
@@ -91,7 +91,7 @@ void Productor(int n) {
 		ReleaseSemaphore(semFull, 1, NULL);
 		ReleaseMutex(hMutexMapping);
 	}
-	printf("-----productor[%d] exit-----\n", n);
+	printf("-----producer[%d] exit-----\n", n);
 }
 void Consumer(int n) {
 	printf("Consumer: %d is running.\n", n);
@@ -126,7 +126,7 @@ void Consumer(int n) {
 }
 int main(int argc, char* argv[]) {
 	if (argc > 1) {
-		if (strcmp(argv[1], "productor") == 0) Productor(atoi(argv[2]));
+		if (strcmp(argv[1], "producer") == 0) Producer(atoi(argv[2]));
 		else if (strcmp(argv[1], "consumer") == 0) Consumer(atoi(argv[2]));
 	}
 	else Parent();

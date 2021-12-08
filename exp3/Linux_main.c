@@ -40,10 +40,10 @@ void Producer()
         {
             argv[0] = i + 48;
             argv[1] = 0;
-            int ret = execl("productor", "productor", argv, 0);
+            int ret = execl("producer", "producer", argv, 0);
             if (ret == -1)
             {
-                printf("Productor start fail\n");
+                printf("Producer start fail\n");
                 exit(0);
             }
         }

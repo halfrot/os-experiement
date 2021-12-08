@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
         pint->buffer[pint->write] = rand() % 26 + 'A';
         pint->write = (pint->write + 1) % 3;
         pint->num++;
-        printf("%02d:%02d:%02d   Productor[%d] success  %d left ", timenow->tm_hour, timenow->tm_min, timenow->tm_sec, n, pint->num);
+        printf("%02d:%02d:%02d   Producer[%d] success  %d left ", timenow->tm_hour, timenow->tm_min, timenow->tm_sec, n, pint->num);
         for (int j = 0; j < 3; j++) printf("%c ", pint->buffer[j]);
         printf("\n");
         shmdt(addr);
@@ -74,6 +74,6 @@ int main(int argc, char *argv[])
         sem_op.sem_flg = 0;
         semop(sem_set_id, &sem_op, 1);
     }
-    printf("Productor %d exit\n", n);
+    printf("Producer %d exit\n", n);
     return 0;
 }
