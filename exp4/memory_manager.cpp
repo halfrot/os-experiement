@@ -10,11 +10,9 @@
 #pragma comment(lib, "shlwapi.lib")
 #pragma comment(lib,"kernel32.lib")
 using namespace std;
-// display protection status of a memory block.
 void displaySystemConfig() {
 	SYSTEM_INFO si;
 	memset(&si, 0, sizeof(si));
-	//GetNativeSystemInfo(&si);
 	GetSystemInfo(&si);
 	TCHAR str_page_size[MAX_PATH];
 	StrFormatByteSize(si.dwPageSize, str_page_size, MAX_PATH);
@@ -40,7 +38,6 @@ void displaySystemConfig() {
 	cout << "dwAllocationGranularity        | " << str_Granularity << endl;
 	cout << "--------------------------------------------" << endl;
 }
-// display computer memory condition
 void displayMemoryCondition() {
 	printf("GlobalMemoryStatusEx\n");
 	cout << "--------------------------------------------" << endl;
@@ -72,7 +69,6 @@ void displaySystemPerformance() {
 		<< "System cache page         | " << pi.SystemCache << endl;
 	cout << "--------------------------------------------" << endl;
 }
-// display a list of processes, with process filename and pid.
 void getAllProcessInformation() {
 	printf("CreateToolhelp32Snapshot\n");
 	PROCESSENTRY32 pe32;
@@ -105,7 +101,6 @@ void printProtection(DWORD dwTarget) {
 	if (dwTarget & PAGE_WRITECOMBINE) as[10] = 'B';
 	printf("  %s  ", as);
 }
-// display memory distribution of a process with pid.
 void getProcessDetail(int pid) {
 	HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, 0, pid);
 	if (!hProcess) {
@@ -120,21 +115,17 @@ void getProcessDetail(int pid) {
 		<< "  Type  | "
 		<< " ModuleName"
 		<< endl;
-	// system info
 	SYSTEM_INFO si;
 	ZeroMemory(&si, sizeof(si));
 	GetSystemInfo(&si);
-	// memory info
 	MEMORY_BASIC_INFORMATION mbi;
 	ZeroMemory(&mbi, sizeof(mbi));
 	LPCVOID pBlock = (LPVOID)si.lpMinimumApplicationAddress;
 	while (pBlock < si.lpMaximumApplicationAddress && VirtualQueryEx(hProcess, pBlock, &mbi, sizeof(mbi)) == sizeof(mbi)) {
-		// size of block 
 		LPCVOID pEnd = (PBYTE)pBlock + mbi.RegionSize;
 		if (pEnd >= si.lpMaximumApplicationAddress) break;
 		TCHAR szSize[MAX_PATH];
 		StrFormatByteSize(mbi.RegionSize, szSize, MAX_PATH);
-		// address and size
 		cout << " | ";
 		cout.fill('0');
 		cout << hex << setw(8) << (LPCVOID)pBlock
@@ -142,14 +133,12 @@ void getProcessDetail(int pid) {
 			<< hex << setw(8) << (LPCVOID)pEnd
 			<< " | ";
 		printf("%10s", szSize);
-		// display memory block status
 		switch (mbi.State) {
 		case MEM_COMMIT:cout << " | " << setw(9) << "Committed" << " | "; break;
 		case MEM_FREE:cout << " | " << setw(9) << "   Free  " << " | "; break;
 		case MEM_RESERVE:cout << " | " << setw(9) << " Reserved" << " | "; break;
 		default: cout << "          | "; break;
 		}
-		// protect status
 		if (mbi.Protect == 0 && mbi.State != MEM_FREE) mbi.Protect = PAGE_READONLY;
 		printProtection(mbi.Protect);
 		switch (mbi.Type) {
@@ -158,14 +147,13 @@ void getProcessDetail(int pid) {
 		case MEM_MAPPED:cout << " |  Mapped | "; break;
 		default:cout << " |         | "; break;
 		}
-		// module
 		TCHAR str_module_name[MAX_PATH];
 		if (GetModuleFileName((HMODULE)pBlock, str_module_name, MAX_PATH) > 0) {
 			PathStripPath(str_module_name);
 			printf("%s", str_module_name);
 		}
 		cout << endl;
-		pBlock = pEnd;	// proceed next memory block
+		pBlock = pEnd;
 	}
 }
 void ShowHelp() {
@@ -181,8 +169,6 @@ void ShowHelp() {
 	cout << "--------------------------------------------------------------------------" << endl;
 }
 int main() {
-	//displaySystemPerformance();
-	//int flag = 9;
 	cout << "-----------System Memory Manager-----------" << endl << endl;
 	cout << "Type [help] for help.\n" << endl;
 	string cmd;
