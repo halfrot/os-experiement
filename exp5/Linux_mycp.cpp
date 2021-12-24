@@ -21,8 +21,10 @@ void copyAttribute(string source, string target)
     if (S_ISLNK(StatBuf.st_mode))
     {
         struct timeval TimeSource[2];
-        TimeSource[0].tv_sec = StatBuf.st_mtime;
-        TimeSource[1].tv_sec = StatBuf.st_ctime;
+        TimeSource[0].tv_sec = StatBuf.st_atime;
+        TimeSource[0].tv_usec = 0;
+        TimeSource[1].tv_sec = StatBuf.st_mtime;
+        TimeSource[1].tv_usec = 0;
         lutimes(target.c_str(), TimeSource);
     }
     else
@@ -47,9 +49,8 @@ void copyNormalFile(string source, string target)
 }
 void copyLink(string source, string target)
 {
-    char PathSource[BUFFSIZE];
-    readlink(source.c_str(), PathSource, BUFFSIZE);
-    symlink(PathSource, target.c_str());
+    string real(realpath(source.c_str(), NULL));
+    symlink(real.c_str(), target.c_str());
     copyAttribute(source, target);
 }
 void copyDir(string source, string target)
