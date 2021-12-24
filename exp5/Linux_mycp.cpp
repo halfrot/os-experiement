@@ -79,6 +79,7 @@ void copyDir(string source, string target)
          << "directory " + source + " end" << endl
          << "*****" << endl;
     copyAttribute(source, target);
+    closedir(PDSource);
 }
 int main(int argc, char *argv[])
 {
