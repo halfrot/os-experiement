@@ -17,7 +17,7 @@ void getCmdLine(char* cmdLine, int argc, char* argv[]) {
 		}
 		cmdLine[lenArgv1 + lenArgv2 + 1] = '\0';
 	}
-	else {
+	else if (argc == 2) {
 		strcpy(cmdLine, argv[1]);
 	}
 }
@@ -54,7 +54,8 @@ int main(int argc, char* argv[]) {
 	// 定义并初始化PROCESS_INFORMATION类型的pi
 	PROCESS_INFORMATION pi;
 	memset(&pi, 0, sizeof(pi));
-	char CharcmdLine[20];
+	char CharcmdLine[30];
+	memset(CharcmdLine, 0, sizeof(CharcmdLine));
 	getCmdLine(CharcmdLine, argc, argv);
 	//printf("%s\n", CharcmdLine);
 	SYSTEMTIME begin_time, end_time;
