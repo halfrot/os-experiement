@@ -20,6 +20,23 @@ void getCmdLine(char* cmdLine, int argc, char* argv[]) {
 	else if (argc == 2) {
 		strcpy(cmdLine, argv[1]);
 	}
+	else if (argc == 4) {
+		int lenArgv1 = strlen(argv[1]);
+		int lenArgv2 = strlen(argv[2]);
+		int lenArgv3 = strlen(argv[3]);
+		for (int i = 0; i < lenArgv1; i++) {
+			cmdLine[i] = argv[1][i];
+		}
+		cmdLine[lenArgv1] = ' ';
+		for (int i = 0; i < lenArgv2; i++) {
+			cmdLine[lenArgv1 + 1 + i] = argv[2][i];
+		}
+		cmdLine[lenArgv1 + lenArgv2 + 1] = ' ';
+		for (int i = 0; i < lenArgv3; i++) {
+			cmdLine[lenArgv1 + lenArgv2 + 2 + i] = argv[3][i];
+		}
+		cmdLine[lenArgv1 + lenArgv2 + lenArgv3 + 2] = '\0';
+	}
 }
 // calMs函数计算子进程以ms为单位的运行时间
 long long calMs(SYSTEMTIME begin_time, SYSTEMTIME end_time) {
@@ -54,10 +71,10 @@ int main(int argc, char* argv[]) {
 	// 定义并初始化PROCESS_INFORMATION类型的pi
 	PROCESS_INFORMATION pi;
 	memset(&pi, 0, sizeof(pi));
-	char CharcmdLine[30];
+	char CharcmdLine[50];
 	memset(CharcmdLine, 0, sizeof(CharcmdLine));
 	getCmdLine(CharcmdLine, argc, argv);
-	//printf("%s\n", CharcmdLine);
+	printf("%s\n", CharcmdLine);
 	SYSTEMTIME begin_time, end_time;
 	// 将char类型的CharcmdLine转换为LPWSTR类型
 	USES_CONVERSION;
